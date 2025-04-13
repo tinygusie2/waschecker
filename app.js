@@ -197,7 +197,7 @@ function updateWashers() {
             if (!washer.notified) {
                 showNotification(
                     'Wasmachine klaar', 
-                    `${washer.name} is klaar met wassen`
+                    `${washer.name} is klaar met wassen/drogen`
                 );
                 washer.notified = true;
             }
