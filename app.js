@@ -1,6 +1,7 @@
 // Globale variabelen
 let washers = [];
 let notificationPermission = false;
+let swRegistration = null;
 
 // DOM elementen
 const washersList = document.getElementById('washers-list');
@@ -10,11 +11,17 @@ const enableNotificationsBtn = document.getElementById('enable-notifications');
 
 // Controleer of de browser notificaties ondersteunt
 const notificationsSupported = 'Notification' in window;
+const serviceWorkerSupported = 'serviceWorker' in navigator;
 
 // Initialisatie
 document.addEventListener('DOMContentLoaded', () => {
     // Laad opgeslagen wasmachines uit localStorage
     loadWashers();
+    
+    // Registreer service worker als deze wordt ondersteund
+    if (serviceWorkerSupported) {
+        registerServiceWorker();
+    }
     
     // Controleer notificatie permissies
     checkNotificationPermission();
@@ -27,9 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateWashers, 1000);
 });
 
+// Registreer service worker
+async function registerServiceWorker() {
+    try {
+        swRegistration = await navigator.serviceWorker.register('service-worker.js');
+        console.log('Service Worker geregistreerd:', swRegistration);
+    } catch (error) {
+        console.error('Service Worker registratie mislukt:', error);
+    }
+}
+
 // Controleer notificatie permissies
 function checkNotificationPermission() {
-    if (!notificationsSupported) {
+    if (!notificationsSupported && !serviceWorkerSupported) {
         console.log('Deze browser ondersteunt geen notificaties');
         return;
     }
@@ -40,11 +57,19 @@ function checkNotificationPermission() {
     } else if (Notification.permission !== 'denied') {
         notificationBanner.classList.remove('hidden');
     }
+    
+    // Voor mobiele apparaten, controleer ook service worker status
+    if (serviceWorkerSupported && swRegistration) {
+        console.log('Service Worker is actief en kan notificaties verzenden');
+    }
 }
 
 // Vraag toestemming voor notificaties
 async function requestNotificationPermission() {
-    if (!notificationsSupported) return;
+    if (!notificationsSupported && !serviceWorkerSupported) {
+        alert('Je browser ondersteunt geen notificaties. Probeer een andere browser.');
+        return;
+    }
     
     try {
         const permission = await Notification.requestPermission();
@@ -52,10 +77,19 @@ async function requestNotificationPermission() {
         if (permission === 'granted') {
             notificationPermission = true;
             notificationBanner.classList.add('hidden');
+            
+            // Registreer service worker opnieuw als deze nog niet is geregistreerd
+            if (serviceWorkerSupported && !swRegistration) {
+                await registerServiceWorker();
+            }
+            
             showNotification('WasChecker', 'Notificaties zijn nu ingeschakeld!');
+        } else if (permission === 'denied') {
+            alert('Je hebt notificaties geweigerd. Je kunt dit wijzigen in je browserinstellingen.');
         }
     } catch (error) {
         console.error('Fout bij het aanvragen van notificatie toestemming:', error);
+        alert('Er is een fout opgetreden bij het aanvragen van notificatie toestemming. Probeer het opnieuw.');
     }
 }
 
@@ -64,15 +98,34 @@ function showNotification(title, body) {
     if (!notificationPermission) return;
     
     try {
-        const notification = new Notification(title, {
-            body: body,
-            icon: 'favicon.svg'
-        });
-        
-        notification.onclick = () => {
-            window.focus();
-            notification.close();
-        };
+        // Gebruik service worker notificaties als beschikbaar
+        if (serviceWorkerSupported && swRegistration) {
+            const options = {
+                body: body,
+                icon: 'favicon.svg',
+                vibrate: [100, 50, 100],
+                data: {
+                    dateOfArrival: Date.now(),
+                    primaryKey: 1
+                },
+                actions: [
+                    {action: 'close', title: 'Sluiten'}
+                ]
+            };
+            
+            swRegistration.showNotification(title, options);
+        } else {
+            // Fallback naar standaard notificaties
+            const notification = new Notification(title, {
+                body: body,
+                icon: 'favicon.svg'
+            });
+            
+            notification.onclick = () => {
+                window.focus();
+                notification.close();
+            };
+        }
     } catch (error) {
         console.error('Fout bij het tonen van notificatie:', error);
     }
@@ -125,6 +178,7 @@ function handleAddWasher(event) {
 function updateWashers() {
     const now = new Date().getTime();
     let updated = false;
+    let uiNeedsUpdate = false;
     
     washers.forEach(washer => {
         if (washer.completed) return;
@@ -137,19 +191,30 @@ function updateWashers() {
             washer.remainingSeconds = 0;
             washer.completed = true;
             updated = true;
+            uiNeedsUpdate = true;
             
             // Stuur notificatie als dat nog niet is gebeurd
             if (!washer.notified) {
                 showNotification(
-                    'Wasmachine klaar!', 
-                    `${washer.name} is klaar met wassen.`
+                    'Wasmachine klaar', 
+                    `${washer.name} is klaar met wassen`
                 );
                 washer.notified = true;
             }
         } else {
             // Update resterende tijd
-            washer.remainingSeconds = Math.ceil(timeLeft / 1000);
-            updated = true;
+            const newRemainingSeconds = Math.ceil(timeLeft / 1000);
+            
+            // Alleen updaten als de seconden echt veranderd zijn
+            if (newRemainingSeconds !== washer.remainingSeconds) {
+                washer.remainingSeconds = newRemainingSeconds;
+                updated = true;
+                
+                // Alleen UI updaten als de weergegeven tijd verandert (elke seconde is niet nodig)
+                if (Math.floor(washer.remainingSeconds % 60) === 0 || washer.remainingSeconds <= 60) {
+                    uiNeedsUpdate = true;
+                }
+            }
             
             // Controleer of de wasmachine halverwege is
             const halfwayPoint = washer.totalSeconds / 2;
@@ -157,8 +222,8 @@ function updateWashers() {
             
             if (elapsedSeconds >= halfwayPoint && !washer.halfwayNotified) {
                 showNotification(
-                    'Wasmachine halverwege!',
-                    `${washer.name} is halverwege het wasprogramma.`
+                    'Wasmachine halverwege',
+                    `${washer.name} is halverwege het wasprogramma`
                 );
                 washer.halfwayNotified = true;
             }
@@ -167,17 +232,21 @@ function updateWashers() {
             const tenMinutesInSeconds = 10 * 60;
             if (washer.remainingSeconds <= tenMinutesInSeconds && !washer.tenMinutesNotified) {
                 showNotification(
-                    'Nog 10 minuten te gaan!',
-                    `${washer.name} is over 10 minuten klaar.`
+                    'Nog 10 minuten te gaan',
+                    `${washer.name} is over 10 minuten klaar`
                 );
                 washer.tenMinutesNotified = true;
             }
         }
     });
     
-    // Update UI alleen als er iets is veranderd
-    if (updated) {
+    // Update UI alleen als er iets is veranderd dat zichtbaar is voor de gebruiker
+    if (uiNeedsUpdate) {
         renderWashers();
+    }
+    
+    // Sla gegevens op als er iets is veranderd
+    if (updated) {
         saveWashers();
     }
 }
