@@ -1,0 +1,308 @@
+/* Reset en basis stijlen */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f7fa;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header stijlen */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+/* Formulier stijlen */
+.add-washer-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.add-washer-container h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #34495e;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+input[type="number"] {
+    width: 150px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #2980b9;
+}
+
+.btn-primary {
+    background-color: #3498db;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+/* Wasmachine lijst stijlen */
+.washers-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.washers-container h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.washers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.washer-card {
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+}
+
+.washer-card h3 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.washer-card .time-remaining {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 10px 0;
+    color: #2c3e50;
+}
+
+.progress-container {
+    height: 10px;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3498db;
+    border-radius: 5px;
+    transition: width 1s ease;
+}
+
+.washer-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 30px;
+    color: #7f8c8d;
+    grid-column: 1 / -1;
+}
+
+/* Notificatie banner */
+.notification-banner {
+    background-color: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-banner p {
+    margin-right: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsieve aanpassingen */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px 10px;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .washers-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .notification-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .notification-banner p {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+        width: 100%;
+        margin-top: 5px;
+    }
+    
+    .washer-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .washer-card {
+        padding: 20px;
+    }
+    
+    .progress-container {
+        height: 15px;
+    }
+    
+    input[type="text"],
+    input[type="number"] {
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+    
+    input[type="number"] {
+        width: 100%;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+}
+
+/* Footer stijlen */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Animaties */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.washer-completed {
+    animation: pulse 1s infinite;
+    background-color: #e8f7f0;
+    border-color: #2ecc71;
+}
+
+.washer-completed .progress-bar {
+    background-color: #2ecc71;
+}
+
+/* Offline status stijlen */
+.offline-indicator {
+    display: none;
+    background-color: #f39c12;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    font-weight: bold;
+}
+
+body.offline .offline-indicator {
+    display: block;
+}
+
+body.offline .add-washer-container {
+    opacity: 0.7;
+}
+
+body.offline .add-washer-container::after {
+    content: "Wijzigingen worden lokaal opgeslagen";
+    display: block;
+    font-size: 0.8rem;
+    color: #f39c12;
+    margin-top: 5px;
+}

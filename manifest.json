@@ -1,0 +1,35 @@
+{
+  "name": "WasChecker",
+  "short_name": "WasChecker",
+  "description": "Beheer uw wasmachines en ontvang notificaties, zelfs offline",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3498db",
+  "orientation": "portrait",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "gcm_sender_id": "103953800507",
+  "prefer_related_applications": false,
+  "categories": ["utilities", "productivity"],
+  "screenshots": [
+    {
+      "src": "favicon.svg",
+      "sizes": "1280x720",
+      "type": "image/svg+xml"
+    }
+  ]
+}

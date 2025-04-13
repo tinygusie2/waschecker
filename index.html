@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasChecker</title>
+    <meta name="description" content="Beheer uw wasmachines en ontvang notificaties, zelfs offline">
+    <meta name="theme-color" content="#3498db">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="WasChecker">
+    <link rel="apple-touch-icon" href="favicon.svg">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WasChecker</h1>
+            <p>Beheer uw wasmachines</p>
+        </header>
+
+        <div id="notification-permission" class="notification-banner hidden">
+            <p>Sta meldingen toe om updates te ontvangen</p>
+            <button id="enable-notifications" class="btn btn-primary">Meldingen inschakelen</button>
+        </div>
+
+        <div class="add-washer-container">
+            <h2>Nieuwe wasmachine toevoegen</h2>
+            <form id="add-washer-form">
+                <div class="form-group">
+                    <label for="washer-name">Naam:</label>
+                    <input type="text" id="washer-name" placeholder="Bijv. Badkamer wasmachine" required>
+                </div>
+                <div class="form-group">
+                    <label for="washer-time">Tijd (minuten):</label>
+                    <input type="number" id="washer-time" min="1" max="180" value="60" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Toevoegen</button>
+            </form>
+        </div>
+
+        <div class="washers-container">
+            <h2>Actieve wasmachines</h2>
+            <div id="washers-list" class="washers-list">
+                <!-- Wasmachines worden hier dynamisch toegevoegd -->
+                <div class="empty-state">
+                    <p>Geen actieve wasmachines</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 WasChecker - Alle rechten voorbehouden</p>
+    </footer>
+
+    <div class="offline-indicator">
+        Je bent offline. De app werkt nog steeds, wijzigingen worden lokaal opgeslagen.
+    </div>
+
+    <div id="install-app" class="notification-banner hidden">
+        <p>Installeer deze app op je apparaat voor offline gebruik</p>
+        <button id="install-button" class="btn btn-primary">Installeren</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
