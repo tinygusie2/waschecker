@@ -6,16 +6,17 @@
     <title>WasChecker</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>WasChecker</h1>
-            <p>Voer ze hieronder in</p>
+            <p>Beheer uw wasmachines</p>
         </header>
 
         <div id="notification-permission" class="notification-banner hidden">
-            <p>klik akkoord voor meldingen</p>
+            <p>Sta meldingen toe om updates te ontvangen</p>
             <button id="enable-notifications" class="btn btn-primary">Meldingen inschakelen</button>
         </div>
 
@@ -35,11 +36,11 @@
         </div>
 
         <div class="washers-container">
-            <h2>wasmachines die bezig zijn</h2>
+            <h2>Actieve wasmachines</h2>
             <div id="washers-list" class="washers-list">
                 <!-- Wasmachines worden hier dynamisch toegevoegd -->
                 <div class="empty-state">
-                    <p>Geen wasmachines of drogers</p>
+                    <p>Geen actieve wasmachines</p>
                 </div>
             </div>
         </div>
